@@ -45,7 +45,7 @@ Fire-Sniffer é uma ferramenta ⚙️ de **segurança cibernética** que monitor
 ### 💻 Instalação manual
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/H-Elsas/Fire-Sniffer
 cd fire-sniffer
 pip install -r requirements.txt
 ```

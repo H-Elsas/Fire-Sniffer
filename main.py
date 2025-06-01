@@ -1,11 +1,12 @@
 from scapy.all import sniff, IP
 from colorlog import ColoredFormatter
+import ipaddress
 import requests
 import time
 import subprocess
 import logging
 
-ABUSEIPDB_API_KEY = "c71e4a93ade656d24ea03086f21899eec6d67c0ef55e355fa23ada88a48c635396ac3e19b788c6df"
+ABUSEIPDB_API_KEY = "SEU_TOKEN_AQUI"
 API_COOLDOWN = 10  # segundos entre consultas para o mesmo IP
 
 ip_cache = {}  # cache dos IPs consultados: ip -> (timestamp, suspeito)
@@ -32,6 +33,14 @@ color_formatter = ColoredFormatter(
 )
 handler.setFormatter(color_formatter)
 logger.addHandler(handler)
+
+# Determinando se o IP é público ou Privado
+def is_public_ip(ip):
+    try:
+        ip_obj = ipaddress.ip_address(ip)
+        return ip_obj.is_global  # True = público, False = privado/local
+    except ValueError:
+        return False  # Se o IP não for válido
 
 def check_ip_abuse(ip):
     if ip in ip_cache:
@@ -66,6 +75,11 @@ def check_ip_abuse(ip):
 def process_packet(packet):
     if IP in packet:
         ip_dst = packet[IP].dst
+        # Se o IP não for público, ignorar
+        if not is_public_ip(ip_dst):
+            logger.info(f"Ignorando IP privado/local: {ip_dst}")
+            return
+        # Checando procedência do IP
         if check_ip_abuse(ip_dst):
             #print(f"[ALERTA] IP suspeito detectado: {ip_dst}")
             logger.warning(f"IP suspeito detectado: {ip_dst}")

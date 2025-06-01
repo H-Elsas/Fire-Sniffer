@@ -5,7 +5,7 @@ import time
 import subprocess
 import logging
 
-ABUSEIPDB_API_KEY = "c71e4a93ade656d24ea03086f21899eec6d67c0ef55e355fa23ada88a48c635396ac3e19b788c6df"
+ABUSEIPDB_API_KEY = "SEU_TOKEN_AQUI"
 API_COOLDOWN = 10  # segundos entre consultas para o mesmo IP
 
 ip_cache = {}  # cache dos IPs consultados: ip -> (timestamp, suspeito)
